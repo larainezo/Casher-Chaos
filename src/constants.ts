@@ -1,54 +1,54 @@
 export const LEVELS = [
-  // level 1
+  // level 1 - Easy: multiples of 5, register working
   {
     lives: 3,
     time: 90,
     cashRegisterWorking: true,
     multiple: 5,
   },
-  // level 2
+  // level 2 - Medium: whole dollars, register working
   {
     lives: 3,
     time: 90,
     cashRegisterWorking: true,
     multiple: 1,
   },
-  // level 3
+  // level 3 - Medium-Hard: 50 cent increments, register working
   {
     lives: 3,
     time: 90,
     cashRegisterWorking: true,
     multiple: 0.5,
   },
-  // level 4
+  // level 4 - Hard: 10 cent increments, register working
   {
     lives: 3,
     time: 90,
     cashRegisterWorking: true,
     multiple: 0.1,
   },
-  // level 5
+  // level 5 - Expert: whole dollars, register broken
   {
     lives: 3,
     time: 90,
     cashRegisterWorking: false,
     multiple: 1,
   },
-  // level 6
+  // level 6 - Expert: 50 cent increments, register broken
   {
     lives: 3,
     time: 90,
     cashRegisterWorking: false,
     multiple: 0.5,
   },
-  // level 7
+  // level 7 - Master: 10 cent increments, register broken
   {
     lives: 3,
     time: 90,
     cashRegisterWorking: false,
     multiple: 0.1,
   },
-  // level 8
+  // level 8 - Ultimate: 10 cent increments, register broken, same as level 7
   {
     lives: 3,
     time: 90,
@@ -65,16 +65,20 @@ export const ASSETS = {
   background: "/images/background.png",
   cashRegister: "/images/cash-register.png",
 
+  // Dollar bills
+  dollar_1: "/images/money/1.png",
   dollar_2: "/images/money/2.png",
   dollar_5: "/images/money/5.png",
   dollar_10: "/images/money/10.png",
   dollar_20: "/images/money/20.png",
 
+  // Coins (in cents)
   cent_10: "/images/money/10-cent.png",
   cent_20: "/images/money/20-cent.png",
   cent_50: "/images/money/50-cent.png",
   cent_100: "/images/money/100-cent.png",
 
+  // Customer images
   person1_1: "/images/customers/person (1)/ (1).png",
   person1_2: "/images/customers/person (1)/ (2).png",
   person1_3: "/images/customers/person (1)/ (3).png",
