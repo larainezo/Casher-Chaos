@@ -38,6 +38,11 @@ function GameComponent({ gs }: GameServiceProps) {
               alert("Congratulations! You completed all levels!");
             } else {
               gs.nextLevel();
+              gs.initState({
+                cash: emptyCash(),
+                customer: 0,
+                remainingLives: gs.getCurrLevelDetails().lives,
+              });
               alert(`Level ${gs.getCurrLevel()} Complete! Moving to next level...`);
             }
           } else {
