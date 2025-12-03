@@ -45,6 +45,7 @@ export function CashierChaos() {
     if (!result) return;
 
     setTimeout(() => {
+      resetResult();
       if (result === "success") {
         if (customer === 4) return gs.endSession("success");
 
@@ -55,7 +56,6 @@ export function CashierChaos() {
         gs.updateState({ remainingLives: remainingLives - 1 });
       }
 
-      resetResult();
     }, 500);
   }, [result]);
 
@@ -64,6 +64,37 @@ export function CashierChaos() {
   const customerSrc = useMemo(() => gs.assets[`person${getRandomNum(8, 1)}_${getRandomNum(4, 1)}`], [customer]);
   const { hundreds, cents } = useMemo(() => getAmount(multiple), [customer]);
   const borrow = cents > 0 ? 1 : 0;
+
+  const handleSubmit = () => {
+    // Step 1: Calculate total value of DOLLAR BILLS selected by player
+    // For each denomination, multiply quantity by value and sum them all
+    const totalCashDollars = HUNDREDS.map((denomination) => {
+      return cash[denomination] * denomination; // e.g., if player has 3 × $20 bills = $60
+    }).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    // Step 2: Calculate total value of COINS selected by player
+    // Convert to cents to avoid floating point errors
+    const totalCashCents = CENTS.map((denomination) => {
+      const valueInCents = Math.round(denomination * 100); // Convert to cents (e.g., 0.5 → 50 cents)
+      return cash[denomination] * valueInCents; // e.g., if player has 2 × 50¢ coins = 100 cents
+    }).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    // Step 3: Calculate the EXPECTED change (what the correct answer is)
+    const expectedChangeDollars = hundreds;
+    const expectedChangeCents = cents;
+
+    // Step 4: Convert everything to cents for accurate comparison
+    // (Avoids floating point precision issues with dollars)
+    const playerTotalCents = (totalCashDollars * 100) + totalCashCents;
+    const expectedTotalCents = (expectedChangeDollars * 100) + expectedChangeCents;
+
+    // Step 5: Compare player's answer with correct answer
+    if (playerTotalCents === expectedTotalCents) {
+      setResult("success"); // ✅ Correct! Show green checkmark
+    } else {
+      setResult("error"); // ❌ Wrong! Show red X
+    }
+  };
 
   return (
     <div className="relative flex flex-col w-full h-full overflow-y-auto">
@@ -77,14 +108,14 @@ export function CashierChaos() {
       <TopBar />
 
       <div
-        className="relative flex flex-col items-center justify-center flex-grow overflow-hidden"
+        className="relative flex flex-col items-center justify-center flex-grow"
         style={{
           backgroundImage: `url(${gs.assets.background})`,
         }}
       >
         <img src={customerSrc} className="absolute right-[5%] h-1/2 bottom-[10%]" />
 
-        <div className="absolute bottom-0 left-0 w-1/2">
+        <div className="absolute top-[40%] left-0 w-1/2">
           <img src={gs.assets.cashRegister} className="-mb-1" />
 
           <div className="absolute top-[12%] left-[12%] text-lg text-white font-medium">
@@ -155,7 +186,7 @@ export function CashierChaos() {
       </div>
 
       <div className="py-4 bg-sky-800 md:py-6 lg:py-10">
-        <div className="grid grid-cols-4 gap-2 px-4 py-2 mx-auto mb-2 tall:py-4 w-fit">
+        <div className="grid grid-cols-4 gap-2 px-4 bg-transparent py-2 ml-auto mb-2 tall:py-4 w-fit">
           {HUNDREDS.map((x) => (
             <button
               key={x}
@@ -186,10 +217,8 @@ export function CashierChaos() {
 
         <button
           className="block pt-1 pb-2 mx-auto text-xl font-bold text-white bg-green-600 shadow-xl rounded-xl w-80 md:scale-125 lg:scale-150"
-          onClick={() => {
-            const a_hundreds = [20, 10, 5, 2, 1].map((x) => cash[x] * x).reduce((a, b) => a + b);
-            const a_cents = [0.5, 0.2, 0.1].map((x) => Math.round(cash[x] * x * 100)).reduce((a, b) => a + b);
-          }}
+          onClick={handleSubmit}
+          disabled={!!result} // Disable the button when showing the result animation
         >
           SUBMIT
         </button>
