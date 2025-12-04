@@ -34,7 +34,7 @@ function GameComponent({ gs }: GameServiceProps) {
           gs.saveReport(report);
           
           if (result === "success") {
-            if (gs.getCurrLevel() === 0) { 
+            if (gs.getCurrLevel() === 7) { 
               setGameComplete(true); 
               return; 
             }
